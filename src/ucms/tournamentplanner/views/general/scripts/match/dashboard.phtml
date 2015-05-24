@@ -1,0 +1,92 @@
+<?php $matchesPerBox = 12 ?>
+<?php $secondsPerBox = 8 ?>
+
+<?php $this->headScript()->prependJavascriptFile("ats2015/general/js/jquery.cycle.all.js") ?>
+<?php $this->headLink()->prependStylesheet("ats2015/scheduler/match/css/dashboard.css") ?>
+
+<?php $this->headScript()->captureJavascriptStart() ?>
+$(document).ready(function() {
+  $('#main_container').cycle({
+    fx: 'fade',
+    timeout: <?php echo $secondsPerBox*1000?>
+  });
+});
+<?php $this->headScript()->captureJavascriptEnd() ?>
+
+<?php $totalBoxCount = 0 ?>
+<div id="main_container" class="center">
+  <?php foreach ($this->tournaments as $tournament): ?>
+  <?php $tournamentMatches = $tournament->matches()->withTeamsAndField()->all() ?>
+  <?php $boxCount = ceil(count($tournamentMatches) / $matchesPerBox); ?>
+  <?php $totalBoxCount += $boxCount ?>
+  <?php foreach (array_chunk($tournamentMatches, $matchesPerBox) as $i => $matches): ?>
+  <div class="item">
+    <div class="box">
+      <div class="header"><?php echo $this->escape($tournament->name)?> (<?php echo ($i+1)?>/<?php echo $boxCount ?>)</div>
+       <table cellpadding='2' cellspacing='0' width='860'>
+         <tr>
+           <td class='head' width='90'>Time</td>
+           <td class='head' width='90' style='text-align:center;'>Poule</td>
+           <td class='head' width='70' style='text-align:center;'>Field</td>
+           <td class='head' width='auto'>Match</td>
+           <td class='head' width='150' style='text-align:center;'>Result</td>
+         </tr>
+         <?php $prevMatch = null ?>
+         <?php foreach ($matches as $match): ?>
+         <tr>
+              <td valign='top'><?php if ($prevMatch === null || $prevMatch['starts_at'] != $match['starts_at']): ?><?php echo $this->locale()->getFormatter()->formatTime($match->starts_at, 'short', "Y-m-d H:i:s") ?><?php endif ?></td>
+              <td valign='top' style='text-align:center;'><?php echo $this->escape($match->group->name) ?></td>
+              <td valign='top' style='text-align:center;'><?php echo $this->escape($match->field->name) ?></td>
+              <td valign='top'><?php echo $this->escape($match->home_team->name)?> - <?php echo $this->escape($match->away_team->name)?></td>
+              <td valign='top' style='text-align:center;'><?php echo $match['goals_home'] ?> - <?php echo $match['goals_away'] ?></td>
+         </tr>
+         <?php $prevMatch = $match ?>
+         <?php endforeach ?>
+       </table>
+    </div>
+  </div>
+  <?php endforeach ?>
+  
+  <?php $totalBoxCount += count($tournament->groups) ?>
+  <?php foreach ($tournament->groups as $group): ?>
+  
+  <div class="item">
+    <div class="box">
+      <div class="header"><?php echo $this->escape($tournament->name)?> - <?php echo $this->escape($group->name) ?></div>
+       <table cellpadding='2' cellspacing='0' width='860'>
+         <tr>
+           <td class='head' width='30'></td>
+           <td class='head' width='auto'>Team</td>
+           <td class='head' width='60' style='text-align:center;'>P</td>
+           <td class='head' width='60' style='text-align:center;'>W</td>
+           <td class='head' width='60' style='text-align:center;'>D</td>
+           <td class='head' width='60' style='text-align:center;'>L</td>
+           <td class='head' width='35'></td>
+           <td class='head' width='60' style='text-align:center;'>PTS</td>
+           <td class='head' width='60' style='text-align:center;'>GD</td>
+           <td class='head' width='60' style='text-align:center;'>GF-GA</td>
+         </tr>
+         <?php foreach ($group->related('standings')->orderByIndex()->withTeam()->all() as $standing): ?>
+         <tr>
+           <td valign='top'><?php echo $standing->getPosition() ?>.</td>
+           <td valign='top'><?php echo $this->escape($standing->team->name) ?></td>
+           <td valign='top' style='text-align:center;'><?php echo $standing->getPlayed() ?></td>
+           <td valign='top' style='text-align:center;'><?php echo $standing->won ?></td>
+           <td valign='top' style='text-align:center;'><?php echo $standing->drawn ?></td>
+           <td valign='top' style='text-align:center;'><?php echo $standing->lost ?></td>
+           <td></td>
+           <td valign='top' style='text-align:center;'><?php echo $standing->getPoints() ?></td>
+           <td valign='top' style='text-align:center;'><?php echo $standing->getGoalsDifference() ?></td>
+           <td valign='top' style='text-align:center;'><?php echo $standing->goals_for ?>-<?php echo $standing->goals_against ?></td>
+         </tr>
+         <?php endforeach ?>
+       </table>
+    </div>
+  </div>
+  
+  <?php endforeach ?>
+
+  <?php endforeach ?>
+</div>
+
+<?php $this->headMeta()->append(array('http-equiv' => 'refresh' , 'content' => ($totalBoxCount * $secondsPerBox) + 1)) ?>

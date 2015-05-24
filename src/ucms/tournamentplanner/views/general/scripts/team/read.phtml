@@ -1,0 +1,37 @@
+<?php $this->subtitle('Teams', $this->url(array('action' => 'index'))) ?>
+<?php $this->subtitle($this->team->name) ?>
+
+<h3>Toernooien en poules</h3>
+<div class="section">
+  <table>
+    <tr>
+      <th style="width: 300px">Toernooi</th>
+      <th style="width: 300px">Poule</th>
+    </tr>
+    <?php foreach ($this->groups as $group): ?>
+    <tr>
+      <td><a href="<?php echo $this->url(array('controller' => 'tournament', 'action' => 'read', 'id' => $group->tournament->id)) ?>"><?php echo $this->escape($group->tournament->name) ?></a></td>
+      <td><a href="<?php echo $this->url(array('controller' => 'group', 'action' => 'read', 'id' => $group->id)) ?>"><?php echo $this->escape($group->name) ?></a></td>
+    <?php endforeach ?>
+  </table>
+</div>
+
+<h3>Eigenschappen</h3>
+<div class="section">
+  <table class="properties">
+    <tr>
+      <td class="name">Naam</td>
+      <td class="value"><?php echo $this->escape($this->team->name)?></td>
+    </tr>
+  </table>
+  <br />
+  <form class="admin-button" method="get" action="<?php echo $this->url(array('action' => 'update')) ?>">
+    <input type="hidden" name="id" value="<?php echo $this->team->id?>" />
+    <button type="submit">Wijzig <img src="ats2015/general/images/icons/16x16/edit.png" style="vertical-align: middle" /></button>
+  </form>
+</div>
+
+<h3>Wedstrijden</h3>
+<div class="section">
+  <?php echo $this->partial('match/_table.phtml', array('groupByStartsAt' => false, 'highlightTeamId' => $this->team->id)) ?>
+</div>

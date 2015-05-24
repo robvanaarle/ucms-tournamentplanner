@@ -1,0 +1,74 @@
+<?php $this->subtitle('Wedstrijden') ?>
+<?php $this->subtitle('Briefjes') ?>
+
+<?php $this->headLink()->prependStylesheet("ats2015/scheduler/match/css/forms.css") ?>
+
+<?php $formsPerPage = 4 ?>
+<h3>Informatie</h3>
+<div class="section" id="print-help">
+  Alle wedstrijden die nog moeten beginnen worden hier getoond.<br />
+  Aantal pagina's: <?php echo ceil(count($this->matches)/$formsPerPage) ?><br />
+  <b>Tip:</b> schakel bij print-instellingen het printen van de kop- en voettekst uit.<br />
+  <input type="button" value="Print..." onclick="window.print()" />
+</div>
+
+<h3>Print voorbeeld</h3>
+<div style="width: 100%;">
+  <div id="form-pages" style="position: relative; margin: 0 auto; overflow: auto">
+    <?php foreach (array_chunk($this->matches, $formsPerPage) as $p => $matches): ?>
+    <div class="form-page" style="position: relative;<?php if ($p>0): ?>page-break-before: always; <?php endif ?>clear: both">
+      <?php foreach ($matches as $i => $match): ?>
+
+      <?php if ($i > 0): ?>
+      <div style="height: 1px; width: 100%; position: relative; margin: 10px 0 10px 0; border-top: 1px #000000 dashed"></div>
+      <?php endif ?>
+
+      <div class="match-form" style="width: 700px; height: 225px; border: 1px #000000 solid; position: relative;">
+        <div class="header" style="width: 680px; float: left; margin: 10px; clear: right">
+          <div style="float: left; width: 150px">
+            <b>Datum:</b>
+            <?php echo $this->locale()->getFormatter()->formatDate($match->starts_at, 'short', "Y-m-d H:i:s") ?>
+          </div>
+          <div style="float: left; width: 100px">
+            <b>Tijd:</b>
+            <?php echo $this->locale()->getFormatter()->formatTime($match->starts_at, 'short', "Y-m-d H:i:s") ?>
+          </div>
+          <div style="float: left; width: 100px">
+            <b>Veld:</b>
+            <?php echo $this->escape($match->field->name) ?>
+          </div>
+          <div style="float: right; text-align: right">
+            #<?php echo $this->escape($match->id) ?>
+          </div>
+        </div>
+
+        <div class="tournament-and-group" style="float: left; margin-top: 15px; width: 100%; clear: right; text-align: center;">
+          <?php echo $this->escape($match->group->tournament->name) ?> - <?php echo $this->escape($match->group->name) ?>
+        </div>
+
+        <div class="teams" style="float: left; margin-top: 15px; clear: right;">
+          <div class="home-team" style="float: left; margin-left: 50px; width: 300px; text-align: center;">
+            <?php echo $this->escape($match->home_team->name) ?>
+          </div>
+          <div class="home-team" style="float: left; text-align: center; width: 300px">
+            <?php echo $this->escape($match->away_team->name) ?>
+          </div>
+        </div>
+
+        <div class="teams" style="float: left; margin-top: 5px; clear: right;">
+          <div class="goals-home" style="float: left; width: 50px; height: 50px; margin-left: 175px; border: 1px #000000 solid"></div>
+          <div class="vs" style="float: left; width: 20px; text-align: center; margin-left: 115px">-</div>
+          <div class="goals-away" style="float: left; width: 50px; height: 50px; margin-left: 115px; border: 1px #000000 solid"></div>
+        </div>
+        
+        <div style="float: left; margin: 30px 0 0 10px; clear: both;">
+          <b>Scheidsrechter:</b> <?php echo $this->escape($match->referee) ?>
+        </div>
+        
+      </div>
+
+      <?php endforeach; ?>
+    </div>
+    <?php endforeach; ?>
+  <div>
+</div>

@@ -1,0 +1,33 @@
+<table class="standing">
+  <?php if (isset($this->caption)): ?>
+  <tr>
+    <th colspan="10" class="caption"><?php echo $this->escape($this->caption) ?></th>
+  </tr>
+  <?php endif ?>
+  <tr>
+    <th></th>
+    <th style="width: 250px">Team</th>
+    <th class="stat">GW</th>
+    <th class="stat">W</th>
+    <th class="stat">G</th>
+    <th class="stat">V</th>
+    <th style="width: 5px"></th>
+    <th class="stat">P</th>
+    <th class="stat">GD</th>
+    <th class="stat">V-T</th>
+  </tr>
+  <?php foreach ($this->standings as $standing): ?>
+  <tr>
+    <td><?php echo $standing->getPosition() ?>.</td>
+    <td><a href="<?php echo $this->url(array('controller' => 'team', 'action' => 'read', 'id' => $standing->team->id)) ?>"><?php echo $this->escape($standing->team->name) ?></a></td>
+    <td class="stat"><?php echo $standing->getPlayed() ?></td>
+    <td class="stat"><?php echo $standing->won ?></td>
+    <td class="stat"><?php echo $standing->drawn ?></td>
+    <td class="stat"><?php echo $standing->lost ?></td>
+    <td></td>
+    <td class="stat"><?php echo $standing->getPoints() ?></td>
+    <td class="stat"><?php echo $standing->getGoalsDifference() ?></td>
+    <td class="stat"><?php echo $standing->goals_for ?>-<?php echo $standing->goals_against ?></td>
+  </tr>
+  <?php endforeach ?>
+</table>
