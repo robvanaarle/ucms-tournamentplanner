@@ -1,0 +1,30 @@
+{
+  "name": "robvanaarle/ucms-tournamentplanner",
+  "description": "Tournament planning module for Ultimo MVC",
+  "type": "library",
+  "keywords": [
+    "tournament",
+    "planner",
+    "UltimoMVC"
+  ],
+  "license": "BSD-3-Clause",
+  "authors": [
+	  {
+	  "name": "Rob van Aarle"
+	  }
+	],
+  "require": {
+    "robvanaarle/ultimo-mvc-config": "dev-master",
+    "robvanaarle/ultimo-mvc-orm": "dev-master",
+    "robvanaarle/ultimo-mvc-form": "dev-master",
+    "robvanaarle/ultimo-mvc-phptpl": "dev-master",
+    "robvanaarle/ultimo-validation": "dev-master",
+    "robvanaarle/ultimo-mvc-acl": "dev-master"
+  },
+  "autoload": {
+  "psr-4": {
+    "ucms\\tournamentplanner\\": "src/ucms/tournamentplanner/"
+  	}
+  }
+}
+
